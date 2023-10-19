@@ -15,7 +15,7 @@
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>nbsNotifierAppServer</module>
+		<module>exchangeRateNotifierServer</module>
 	</modules>
 
 	<properties>
@@ -24,6 +24,8 @@
 		<!--	Dependency version	-->
 		<spring-boot.version>3.1.2</spring-boot.version>
 		<lombok.version>1.18.28</lombok.version>
+		<!--	Firebase	-->
+		<firebase-admin.version>9.1.1</firebase-admin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -48,6 +50,12 @@
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>${lombok.version}</version>
+			</dependency>
+			<!--	Firebase	-->
+			<dependency>
+				<groupId>com.google.firebase</groupId>
+				<artifactId>firebase-admin</artifactId>
+				<version>${firebase-admin.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
