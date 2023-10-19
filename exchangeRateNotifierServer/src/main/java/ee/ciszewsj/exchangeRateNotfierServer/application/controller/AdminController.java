@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class TestController {
+public class AdminController {
 	private final Firestore firestore;
 
 	@Data
@@ -34,5 +34,6 @@ public class TestController {
 	public void saveData(String collection, String documentId, Object data) {
 		DocumentReference docRef = firestore.collection(collection).document(documentId);
 		docRef.set(data);
+
 	}
 }

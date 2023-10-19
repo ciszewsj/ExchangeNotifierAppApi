@@ -23,7 +23,6 @@ public class FirestoreConfig {
 
 	@Bean
 	public FirebaseApp firebaseInit() throws IOException {
-		log.info("??? {}", firebaseProperties);
 		FileInputStream serviceAccount =
 				new FileInputStream(firebaseProperties.getServiceAccountKey());
 
@@ -38,6 +37,19 @@ public class FirestoreConfig {
 
 	@Bean
 	public Firestore firestore(FirebaseApp app) {
+		//		firestore.collection("TestCollection").addSnapshotListener((command, db) -> {
+//			if (db != null) {
+//				log.info("Status {}", db.getStatus());
+//			}
+//			if (command != null) {
+//				command.getDocumentChanges().forEach(documentChange -> {
+//					log.info(documentChange.getDocument().getId());
+//					documentChange.getDocument().getData().forEach(
+//							(key, value) -> log.info("{} - {}", key, value)
+//					);
+//				});
+//			}
+//		});
 		return FirestoreClient.getFirestore(app);
 	}
 }
