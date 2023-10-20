@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 @Builder
-public class SettingsEntity {
-	private List<NotificationTypeEntity> notificationTypes;
+public class CurrenciesSettingsEntity {
+	private List<CurrencyEntity> currencies;
 }

@@ -2,7 +2,6 @@ package ee.ciszewsj.exchangeRateNotfierServer.config;
 
 import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.FirestoreInterface;
 import ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.NotifierService;
-import ee.ciszewsj.exchangeRateNotfierServer.data.SettingsEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -19,11 +18,11 @@ public class SettingsConfig {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void onStartUp() {
-		log.info("On startUp");
-		SettingsEntity settings = SettingsEntity.builder()
-				.notificationTypes(notifierService.getNotificationSettings())
-				.build();
-
-		firestoreService.createSettings(settings);
+//		log.info("On startUp");
+//		SettingsEntity settings = SettingsEntity.builder()
+//				.notificationTypes(notifierService.getNotificationSettings())
+//				.build();
+//
+//		firestoreService.createSettings(settings);
 	}
 }
