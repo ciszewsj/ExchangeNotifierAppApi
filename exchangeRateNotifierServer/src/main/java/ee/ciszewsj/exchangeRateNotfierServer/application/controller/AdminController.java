@@ -3,11 +3,11 @@ package ee.ciszewsj.exchangeRateNotfierServer.application.controller;
 
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
-import lombok.Builder;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -16,20 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 	private final Firestore firestore;
 
-	@Data
-	@Builder
-	public static class Test {
-		private String name;
-		private String surname;
-	}
-
-	@GetMapping
-	public void create() {
-		saveData("TestCollection", "1", Test.builder().name("Name").surname("Kowalski").build());
-
-	}
-
-	@PutMapping
+	@PostMapping("/loadCurrenciesList")
 	public void addMainCurrency() {
 
 	}

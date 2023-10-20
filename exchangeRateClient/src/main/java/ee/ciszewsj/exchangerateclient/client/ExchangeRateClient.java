@@ -7,14 +7,14 @@ import ee.ciszewsj.exchangerateclient.data.response.StandardResponse;
 import ee.ciszewsj.exchangerateclient.data.response.SupportedCodeResponse;
 
 public interface ExchangeRateClient {
-	StandardResponse standardRequest(String currency);
+	StandardResponse standardRequest(String currency) throws ExchangeRateDataException;
 
 	HistoricalResponse historicalDataRequest(String currency,
 	                                         String year,
 	                                         String month,
-	                                         String day);
+	                                         String day) throws ExchangeRateDataException;
 
-	SupportedCodeResponse supportedCodes();
+	SupportedCodeResponse supportedCodes() throws ExchangeRateDataException;
 
-	ApiRequestQuotaResponse apiRequestQuota();
+	ApiRequestQuotaResponse apiRequestQuota() throws ExchangeRateDataException;
 }
