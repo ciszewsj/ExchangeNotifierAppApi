@@ -1,9 +1,6 @@
 package ee.ciszewsj.exchangeRateNotfierServer.application.firestore;
 
-import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
-import com.google.firebase.database.annotations.NotNull;
-import ee.ciszewsj.exchangeRateNotfierServer.data.CurrenciesSettingsEntity;
 import ee.ciszewsj.exchangeRateNotfierServer.data.CurrencyEntity;
 import ee.ciszewsj.exchangeRateNotfierServer.data.NotificationTypeEntity;
 import lombok.RequiredArgsConstructor;
@@ -11,20 +8,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import static ee.ciszewsj.exchangeRateNotfierServer.application.firestore.FirestoreStaticDocumentsIndex.CURRENCIES_SETTINGS;
-import static ee.ciszewsj.exchangeRateNotfierServer.application.firestore.FirestoreStaticDocumentsIndex.NOTIFICATIONS_TYPE_DOCUMENT;
+import static ee.ciszewsj.exchangeRateNotfierServer.data.CurrencyEntity.IS_MAIN;
+import static ee.ciszewsj.exchangeRateNotfierServer.data.CurrencyEntity.SYMBOL;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FirestoreService implements FirestoreInterface {
+public class FirestoreService implements SettingsFirestoreInterface {
 	private final Firestore firestore;
 
-	private final String COLLECTION = FirestoreCollections.SETTINGS.toString();
+	private final String SETTINGS_COLLECTION = FirestoreCollections.SETTINGS.toString();
 	private final String CURRENCIES_COLLECTION = FirestoreCollections.CURRENCIES.toString();
 
 	public void updateCurrenciesList(List<List<String>> currencies) throws ExecutionException, InterruptedException {
@@ -39,7 +35,7 @@ public class FirestoreService implements FirestoreInterface {
 
 		currencies.stream()
 				.filter(el -> el.size() == 2)
-				.map(el -> CurrencyEntity.builder().symbol(el.get(1)).currency(el.get(0)).build())
+				.map(el -> CurrencyEntity.builder().symbol(el.get(0)).currency(el.get(1)).build())
 				.filter(el -> !existingCurrencies.contains(el.getCurrency()))
 				.forEach(el -> {
 					DocumentReference newEntryRef = reference.document(el.getCurrency());
@@ -49,31 +45,22 @@ public class FirestoreService implements FirestoreInterface {
 
 	@Override
 	public void updateNotifierSettings(List<NotificationTypeEntity> notificationTypeEntities) throws ExecutionException, InterruptedException {
-		DocumentReference document = firestore.collection(COLLECTION).document(NOTIFICATIONS_TYPE_DOCUMENT);
-		DocumentSnapshot future = document.get().get();
-
-//		document.update()
+		CollectionReference collection = firestore.collection(SETTINGS_COLLECTION);
+		QuerySnapshot querySnapshot = collection.get().get();
+		querySnapshot.forEach(queryDocumentSnapshot -> queryDocumentSnapshot.getReference().delete());
+		notificationTypeEntities.forEach(
+				notificationTypeEntity -> collection.document(notificationTypeEntity.getTypeName()).set(notificationTypeEntity)
+		);
 	}
 
 	@Override
-	public void setCurrenciesIsMainVariable(String currency, boolean isMain) throws ExecutionException, InterruptedException {
-
-	}
-
-	private <T> Optional<T> getDocumentIfExist(String documentName, Class<T> className) throws ExecutionException, InterruptedException {
-		DocumentReference document = firestore.collection(COLLECTION).document(documentName);
-		ApiFuture<DocumentSnapshot> future = document.get();
-		DocumentSnapshot snapshot = future.get();
-		if (snapshot.exists()) {
-			return Optional.ofNullable(snapshot.toObject(className));
-		} else {
-			return Optional.empty();
+	public void setCurrenciesIsMainVariable(String currency, boolean isMain) throws ExecutionException, InterruptedException, WrongQuerySizeException {
+		CollectionReference reference = firestore.collection(CURRENCIES_COLLECTION);
+		QuerySnapshot query = reference.whereEqualTo(SYMBOL, currency).get().get();
+		if (query.isEmpty() || query.getDocuments().size() != 1) {
+			throw new WrongQuerySizeException();
 		}
-
-	}
-
-	private void saveData(@NotNull String collection, @NotNull String documentId, @NotNull Object data) {
-		DocumentReference docRef = firestore.collection(collection).document(documentId);
-		docRef.set(data);
+		DocumentReference documentReference = query.getDocuments().get(0).getReference();
+		documentReference.update(IS_MAIN, isMain);
 	}
 }

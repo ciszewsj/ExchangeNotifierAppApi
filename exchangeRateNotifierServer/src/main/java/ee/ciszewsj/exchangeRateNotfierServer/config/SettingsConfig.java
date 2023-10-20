@@ -1,6 +1,6 @@
 package ee.ciszewsj.exchangeRateNotfierServer.config;
 
-import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.FirestoreInterface;
+import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.SettingsFirestoreInterface;
 import ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.NotifierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class SettingsConfig {
-	private final FirestoreInterface firestoreService;
+	private final SettingsFirestoreInterface firestoreService;
 
 	private final NotifierService notifierService;
 
