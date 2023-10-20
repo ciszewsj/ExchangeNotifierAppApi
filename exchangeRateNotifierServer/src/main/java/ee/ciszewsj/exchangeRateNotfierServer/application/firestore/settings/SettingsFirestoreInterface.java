@@ -1,5 +1,6 @@
-package ee.ciszewsj.exchangeRateNotfierServer.application.firestore;
+package ee.ciszewsj.exchangeRateNotfierServer.application.firestore.settings;
 
+import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.WrongQuerySizeException;
 import ee.ciszewsj.exchangeRateNotfierServer.data.NotificationTypeEntity;
 
 import java.util.List;

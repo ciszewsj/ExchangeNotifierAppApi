@@ -1,6 +1,6 @@
 package ee.ciszewsj.exchangeRateNotfierServer.config;
 
-import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.SettingsFirestoreInterface;
+import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.settings.SettingsFirestoreInterface;
 import ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.NotifierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

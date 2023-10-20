@@ -46,8 +46,8 @@ public record ExchangeRateClientService(ExchangeRateFeignFacade feignFacade,
 	}
 
 	@Override
-	public HistoricalResponse historicalDataRequest(@NotNull String currency, @NotNull String year, @NotNull String
-			month, @NotNull String day) throws ExchangeRateDataException {
+	public HistoricalResponse historicalDataRequest(@NotNull String currency, int year, int
+			month, int day) throws ExchangeRateDataException {
 		try (Response response = feignFacade.historicalDataRequest(apiKey, currency, year, month, day)) {
 			byte[] responseMsg;
 			try {

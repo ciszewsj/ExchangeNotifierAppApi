@@ -10,9 +10,9 @@ public interface ExchangeRateClient {
 	StandardResponse standardRequest(String currency) throws ExchangeRateDataException;
 
 	HistoricalResponse historicalDataRequest(String currency,
-	                                         String year,
-	                                         String month,
-	                                         String day) throws ExchangeRateDataException;
+	                                         int year,
+	                                         int month,
+	                                         int day) throws ExchangeRateDataException;
 
 	SupportedCodeResponse supportedCodes() throws ExchangeRateDataException;
 

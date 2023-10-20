@@ -1,6 +1,8 @@
-package ee.ciszewsj.exchangeRateNotfierServer.application.firestore;
+package ee.ciszewsj.exchangeRateNotfierServer.application.firestore.settings;
 
 import com.google.cloud.firestore.*;
+import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.FirestoreCollections;
+import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.WrongQuerySizeException;
 import ee.ciszewsj.exchangeRateNotfierServer.data.CurrencyEntity;
 import ee.ciszewsj.exchangeRateNotfierServer.data.NotificationTypeEntity;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,7 @@ import static ee.ciszewsj.exchangeRateNotfierServer.data.CurrencyEntity.SYMBOL;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FirestoreService implements SettingsFirestoreInterface {
+public class FirestoreSettingsService implements SettingsFirestoreInterface {
 	private final Firestore firestore;
 
 	private final String SETTINGS_COLLECTION = FirestoreCollections.SETTINGS.toString();

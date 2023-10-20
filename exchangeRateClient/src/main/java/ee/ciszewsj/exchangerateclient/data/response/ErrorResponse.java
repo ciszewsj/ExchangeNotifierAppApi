@@ -9,6 +9,6 @@ import lombok.Data;
 public class ErrorResponse {
 	@JsonProperty("result")
 	private String result;
-	@JsonProperty("error_type")
+	@JsonProperty("error-type")
 	private String errorType;
 }
