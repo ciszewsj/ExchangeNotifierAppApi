@@ -9,12 +9,9 @@ import ee.ciszewsj.exchangeratecommondata.repositories.currencies.CurrenciesRate
 import ee.ciszewsj.exchangeratecommondata.repositories.currencies.CurrenciesRateService;
 import ee.ciszewsj.exchangeratecommondata.repositories.exchange.ExchangeRateFirestoreInterface;
 import ee.ciszewsj.exchangeratecommondata.repositories.exchange.FirestoreExchangeRateService;
-import ee.ciszewsj.exchangeratecommondata.repositories.settings.FirestoreSettingsService;
-import ee.ciszewsj.exchangeratecommondata.repositories.settings.SettingsFirestoreInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -50,11 +47,6 @@ public class FirestoreConfig {
 	@Bean
 	public ExchangeRateFirestoreInterface exchangeRateFirestoreInterface(Firestore firestore) {
 		return new FirestoreExchangeRateService(firestore);
-	}
-
-	@Bean
-	public SettingsFirestoreInterface settingsFirestoreInterface(Firestore firestore) {
-		return new FirestoreSettingsService(firestore);
 	}
 
 	@Bean

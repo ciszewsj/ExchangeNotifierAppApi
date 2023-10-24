@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public interface CurrenciesRateFirestoreInterface {
-	void updateCurrenciesDocument(List<List<String>> currencies) throws ExecutionException, InterruptedException;
+	List<CurrencyEntity> updateCurrenciesDocument(List<List<String>> currencies) throws ExecutionException, InterruptedException;
 
-	void setCurrenciesIsMainVariable(Map<String, Boolean> props) throws ExecutionException, InterruptedException, WrongQuerySizeException;
+	List<CurrencyEntity> setCurrenciesIsMainVariable(Map<String, Boolean> props) throws ExecutionException, InterruptedException, WrongQuerySizeException;
 
 	List<CurrencyEntity> getCurrencies() throws ExecutionException, InterruptedException;
 }

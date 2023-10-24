@@ -6,63 +6,107 @@ import ee.ciszewsj.exchangerateclient.data.response.HistoricalResponse;
 import ee.ciszewsj.exchangerateclient.data.response.StandardResponse;
 import ee.ciszewsj.exchangeratecommondata.dto.CurrencyEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.ExchangeCurrencyRateEntity;
+import ee.ciszewsj.exchangeratecommondata.repositories.currencies.CurrenciesRateFirestoreInterface;
 import ee.ciszewsj.exchangeratecommondata.repositories.exchange.ExchangeRateFirestoreInterface;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class CurrencyUpdaterService {
 	private final ExchangeRateClient exchangeRateClient;
-	private final ExchangeRateEntityConverterService converterService;
 	private final ExchangeRateFirestoreInterface exchangeRateDb;
 
-	private final List<String> activeCurrencySymbols = new ArrayList<>();
+	private List<String> activeCurrencySymbols = new ArrayList<>();
 
 	public CurrencyUpdaterService(ExchangeRateClient exchangeRateClient,
-	                              ExchangeRateEntityConverterService converterService,
-	                              ExchangeRateFirestoreInterface exchangeRateDb) {
+	                              ExchangeRateFirestoreInterface exchangeRateDb,
+	                              CurrenciesRateFirestoreInterface currenciesDb) {
 		this.exchangeRateClient = exchangeRateClient;
-		this.converterService = converterService;
 		this.exchangeRateDb = exchangeRateDb;
+
+		try {
+			updateActiveCurrencySymbols(currenciesDb.getCurrencies());
+		} catch (ExecutionException | InterruptedException e) {
+			log.warn("Could not load currencies from DB due to {}", e, e);
+		}
+	}
+
+	public void updateActiveCurrencySymbols(List<CurrencyEntity> currencyEntities) {
+		activeCurrencySymbols = currencyEntities.stream().filter(CurrencyEntity::isMain).map(CurrencyEntity::getSymbol).collect(Collectors.toList());
+		log.info("Set {} currencies as active ", activeCurrencySymbols.size());
+	}
+
+	public void updateAllActiveCurrencies() {
+		activeCurrencySymbols.forEach(symbol -> {
+			try {
+				loadNewCurrencyExchangeRate(symbol);
+			} catch (Exception e) {
+				log.error("Could not load new currency exchange rate due to {}", e, e);
+			}
+		});
 	}
 
 
-//	@EventListener(CurrencyChangedEvent.class)
-//	public void ss(CurrencyChangedEvent event) {
-//		CurrencyEntity entity = event.getEntity();
-//		log.info("Received event [CurrencyChangedEvent] with body : [{}]", entity);
-//		if (entity.isMain() && !activeCurrencySymbols.contains(entity.getCurrency())) {
-//			activeCurrencySymbols.add(entity.getCurrency());
-//		} else {
-//			activeCurrencySymbols.remove(entity.getCurrency());
-//		}
-//	}
-
-	public ExchangeCurrencyRateEntity loadNewCurrencyExchangeRate(String currencySymbol) throws ExchangeRateDataException {
+	public StandardResponse loadNewCurrencyExchangeRate(String currencySymbol) throws ExchangeRateDataException {
 		StandardResponse response = exchangeRateClient.standardRequest(currencySymbol);
+		log.info("Loading currency {}...", currencySymbol);
+		response.getConversionRates().forEach((key, value) -> {
+			try {
+				exchangeRateDb.addExchangeRate(response.getBaseCode(),
+						key,
+						ExchangeCurrencyRateEntity
+								.builder()
+								.date(new Date(response.getTimeLastUpdateUnix() * 1000))
+								.rate(value)
+								.build());
+				log.debug("Successfully load currency {} - {}", currencySymbol, key);
 
-		ExchangeCurrencyRateEntity entity = converterService.convert(response);
+			} catch (ExecutionException | InterruptedException e) {
+				log.error("Could not add {} - {} exchange rate due to {}", response.getBaseCode(), key, e, e);
+			}
+		});
 
-		exchangeRateDb.addExchangeRate(entity);
-
-		return entity;
+		return response;
 	}
 
-	public ExchangeCurrencyRateEntity loadHistoricalCurrencyExchangeRate(String currencySymbol,
-	                                                                     int year,
-	                                                                     int month,
-	                                                                     int day) throws ExchangeRateDataException {
+	public HistoricalResponse loadHistoricalCurrencyExchangeRate(String currencySymbol,
+	                                                             int year,
+	                                                             int month,
+	                                                             int day) throws ExchangeRateDataException {
 		HistoricalResponse response = exchangeRateClient.historicalDataRequest(currencySymbol, year, month, day);
 
-		ExchangeCurrencyRateEntity entity = converterService.convert(response);
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, response.getYear());
+		calendar.set(Calendar.MONTH, response.getMonth() - 1);
+		calendar.set(Calendar.DAY_OF_MONTH, response.getDay());
+		calendar.set(Calendar.HOUR_OF_DAY, 12);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
 
-		exchangeRateDb.addExchangeRate(entity);
 
-		return entity;
+		response.getConversionRates().forEach((key, value) -> {
+			try {
+				exchangeRateDb.addExchangeRate(response.getBaseCode(),
+						key,
+						ExchangeCurrencyRateEntity
+								.builder()
+								.date(new Date(calendar.getTimeInMillis()))
+								.rate(value)
+								.build());
+			} catch (ExecutionException | InterruptedException e) {
+				log.error("Could not add exchange rate due to {}", e, e);
+			}
+
+		});
+
+		return response;
 	}
 }

@@ -5,9 +5,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import ee.ciszewsj.exchangeratecommondata.documents.CurrencyDocument;
 import ee.ciszewsj.exchangeratecommondata.dto.CurrencyEntity;
-import ee.ciszewsj.exchangeratecommondata.exceptions.WrongQuerySizeException;
 import ee.ciszewsj.exchangeratecommondata.repositories.FirestoreCollections;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -18,13 +16,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RequiredArgsConstructor
-public class CurrenciesRateService implements CurrenciesRateFirestoreInterface {
-	private final Firestore firestore;
+public record CurrenciesRateService(Firestore firestore) implements CurrenciesRateFirestoreInterface {
 
-	private final String SETTINGS_COLLECTION = FirestoreCollections.SETTINGS.toString();
-
-	private final String DOCUMENT_CURRENCY_NAME = "CURRENCIES";
+	private final static String SETTINGS_COLLECTION = FirestoreCollections.SETTINGS.toString();
+	private final static String DOCUMENT_CURRENCY_NAME = "CURRENCIES";
 
 
 	private DocumentSnapshot getDocument() throws ExecutionException, InterruptedException {
@@ -33,7 +28,7 @@ public class CurrenciesRateService implements CurrenciesRateFirestoreInterface {
 	}
 
 	@Override
-	public void updateCurrenciesDocument(List<List<String>> currencies) throws ExecutionException, InterruptedException {
+	public List<CurrencyEntity> updateCurrenciesDocument(List<List<String>> currencies) throws ExecutionException, InterruptedException {
 		DocumentSnapshot document = getDocument();
 
 		List<CurrencyEntity> currencyEntities = currencies.stream()
@@ -58,17 +53,18 @@ public class CurrenciesRateService implements CurrenciesRateFirestoreInterface {
 				});
 
 				document.getReference().set(CurrencyDocument.builder().currenciesList(newCurrencyEntityList).build());
-				return;
+				return newCurrencyEntityList;
 			} catch (Exception e) {
 				log.error("Could not read CurrencyDocument: {}", e, e);
 			}
 		}
-
 		document.getReference().set(CurrencyDocument.builder().currenciesList(currencyEntities).build());
+
+		return currencyEntities;
 	}
 
 	@Override
-	public void setCurrenciesIsMainVariable(Map<String, Boolean> props) throws ExecutionException, InterruptedException, WrongQuerySizeException {
+	public List<CurrencyEntity> setCurrenciesIsMainVariable(Map<String, Boolean> props) throws ExecutionException, InterruptedException {
 		DocumentSnapshot document = getDocument();
 		List<CurrencyEntity> currencyEntities = Objects.requireNonNull(document.toObject(CurrencyDocument.class)).getCurrenciesList();
 		props.forEach((key, data) -> {
@@ -82,6 +78,8 @@ public class CurrenciesRateService implements CurrenciesRateFirestoreInterface {
 				log.error("Could not find element {} to set isMain to {}", key, data);
 			}
 		});
+		document.getReference().set(CurrencyDocument.builder().currenciesList(currencyEntities).build());
+		return currencyEntities;
 	}
 
 	@Override
