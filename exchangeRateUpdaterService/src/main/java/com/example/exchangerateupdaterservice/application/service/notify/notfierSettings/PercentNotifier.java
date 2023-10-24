@@ -1,6 +1,6 @@
-package ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.notfierSettings;
+package com.example.exchangerateupdaterservice.application.service.notify.notfierSettings;
 
-import ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.NotifierInterface;
+import com.example.exchangerateupdaterservice.application.service.notify.NotifierInterface;
 import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.OptionEntity;
 import lombok.RequiredArgsConstructor;

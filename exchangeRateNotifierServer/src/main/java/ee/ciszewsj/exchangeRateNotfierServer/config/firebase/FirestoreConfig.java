@@ -5,9 +5,16 @@ import com.google.cloud.firestore.Firestore;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import ee.ciszewsj.exchangeratecommondata.repositories.currencies.CurrenciesRateFirestoreInterface;
+import ee.ciszewsj.exchangeratecommondata.repositories.currencies.CurrenciesRateService;
+import ee.ciszewsj.exchangeratecommondata.repositories.exchange.ExchangeRateFirestoreInterface;
+import ee.ciszewsj.exchangeratecommondata.repositories.exchange.FirestoreExchangeRateService;
+import ee.ciszewsj.exchangeratecommondata.repositories.settings.FirestoreSettingsService;
+import ee.ciszewsj.exchangeratecommondata.repositories.settings.SettingsFirestoreInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,19 +44,21 @@ public class FirestoreConfig {
 
 	@Bean
 	public Firestore firestore(FirebaseApp app) {
-		//		firestore.collection("TestCollection").addSnapshotListener((command, db) -> {
-//			if (db != null) {
-//				log.info("Status {}", db.getStatus());
-//			}
-//			if (command != null) {
-//				command.getDocumentChanges().forEach(documentChange -> {
-//					log.info(documentChange.getDocument().getId());
-//					documentChange.getDocument().getData().forEach(
-//							(key, value) -> log.info("{} - {}", key, value)
-//					);
-//				});
-//			}
-//		});
 		return FirestoreClient.getFirestore(app);
+	}
+
+	@Bean
+	public ExchangeRateFirestoreInterface exchangeRateFirestoreInterface(Firestore firestore) {
+		return new FirestoreExchangeRateService(firestore);
+	}
+
+	@Bean
+	public SettingsFirestoreInterface settingsFirestoreInterface(Firestore firestore) {
+		return new FirestoreSettingsService(firestore);
+	}
+
+	@Bean
+	public CurrenciesRateFirestoreInterface currenciesRateFirestoreInterface(Firestore firestore) {
+		return new CurrenciesRateService(firestore);
 	}
 }

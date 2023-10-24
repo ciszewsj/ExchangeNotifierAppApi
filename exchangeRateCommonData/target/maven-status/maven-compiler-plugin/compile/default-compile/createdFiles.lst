@@ -9,6 +9,7 @@ ee\ciszewsj\exchangeratecommondata\dto\CurrenciesSettingsEntity.class
 ee\ciszewsj\exchangeratecommondata\dto\CurrencyEntity.class
 ee\ciszewsj\exchangeratecommondata\dto\NotificationTypeEntity$NotificationTypeEntityBuilder.class
 ee\ciszewsj\exchangeratecommondata\dto\CurrenciesSettingsEntity$CurrenciesSettingsEntityBuilder.class
+ee\ciszewsj\exchangeratecommondata\repositories\currencies\CurrencyChangedEvent.class
 ee\ciszewsj\exchangeratecommondata\exceptions\WrongQuerySizeException.class
 ee\ciszewsj\exchangeratecommondata\repositories\settings\FirestoreSettingsService.class
 ee\ciszewsj\exchangeratecommondata\repositories\settings\SettingsFirestoreInterface.class
@@ -17,4 +18,6 @@ ee\ciszewsj\exchangeratecommondata\dto\NotificationsSettingsEntity.class
 ee\ciszewsj\exchangeratecommondata\repositories\exchange\ExchangeRateFirestoreInterface.class
 ee\ciszewsj\exchangeratecommondata\dto\CurrencyRateEntity.class
 ee\ciszewsj\exchangeratecommondata\dto\OptionEntity.class
+ee\ciszewsj\exchangeratecommondata\repositories\currencies\CurrenciesRateService.class
+ee\ciszewsj\exchangeratecommondata\repositories\currencies\CurrenciesRateFirestoreInterface.class
 ee\ciszewsj\exchangeratecommondata\dto\NotificationsSettingsEntity$NotificationsSettingsEntityBuilder.class

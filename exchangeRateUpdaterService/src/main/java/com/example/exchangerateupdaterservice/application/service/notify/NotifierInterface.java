@@ -1,4 +1,4 @@
-package ee.ciszewsj.exchangeRateNotfierServer.application.service.notify;
+package com.example.exchangerateupdaterservice.application.service.notify;
 
 import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
 
