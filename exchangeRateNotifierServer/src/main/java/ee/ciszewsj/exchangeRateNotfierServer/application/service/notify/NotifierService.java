@@ -4,7 +4,7 @@ import ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.notfierS
 import ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.notfierSettings.TimeNotifier;
 import ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.notfierSettings.ValueHigherThanNotifier;
 import ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.notfierSettings.ValueLessThanNotifier;
-import ee.ciszewsj.exchangeRateNotfierServer.data.NotificationTypeEntity;
+import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

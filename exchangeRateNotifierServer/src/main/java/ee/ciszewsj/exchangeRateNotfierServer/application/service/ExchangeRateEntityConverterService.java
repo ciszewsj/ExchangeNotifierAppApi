@@ -1,8 +1,8 @@
 package ee.ciszewsj.exchangeRateNotfierServer.application.service;
 
-import ee.ciszewsj.exchangeRateNotfierServer.data.ExchangeCurrencyRateEntity;
 import ee.ciszewsj.exchangerateclient.data.response.HistoricalResponse;
 import ee.ciszewsj.exchangerateclient.data.response.StandardResponse;
+import ee.ciszewsj.exchangeratecommondata.dto.ExchangeCurrencyRateEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

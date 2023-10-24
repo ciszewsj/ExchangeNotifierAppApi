@@ -1,14 +1,17 @@
 package ee.ciszewsj.exchangeRateNotfierServer.application.service;
 
-import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.exchange.ExchangeRateFirestoreInterface;
-import ee.ciszewsj.exchangeRateNotfierServer.data.ExchangeCurrencyRateEntity;
+import ee.ciszewsj.exchangeratecommondata.repositories.exchange.ExchangeRateFirestoreInterface;
 import ee.ciszewsj.exchangerateclient.client.ExchangeRateClient;
 import ee.ciszewsj.exchangerateclient.client.ExchangeRateDataException;
 import ee.ciszewsj.exchangerateclient.data.response.HistoricalResponse;
 import ee.ciszewsj.exchangerateclient.data.response.StandardResponse;
+import ee.ciszewsj.exchangeratecommondata.dto.ExchangeCurrencyRateEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -17,6 +20,8 @@ public class CurrencyUpdaterService {
 	private final ExchangeRateClient exchangeRateClient;
 	private final ExchangeRateEntityConverterService converterService;
 	private final ExchangeRateFirestoreInterface exchangeRateDb;
+
+	private List<String> activeCurrencySymbols = new ArrayList<>();
 
 
 	public ExchangeCurrencyRateEntity loadNewCurrencyExchangeRate(String currencySymbol) throws ExchangeRateDataException {

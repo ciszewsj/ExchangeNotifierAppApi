@@ -1,6 +1,6 @@
 package ee.ciszewsj.exchangeRateNotfierServer.application.service.notify;
 
-import ee.ciszewsj.exchangeRateNotfierServer.data.NotificationTypeEntity;
+import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
 
 public interface NotifierInterface {
 	NotificationTypeEntity toNotificationTypeEntity();

@@ -1,0 +1,13 @@
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\exchange\FirestoreExchangeRateService.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\NotificationTypeEntity.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\CurrencyRateEntity.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\CurrenciesSettingsEntity.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\CurrencyEntity.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\FirestoreCollections.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\exceptions\WrongQuerySizeException.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\NotificationsSettingsEntity.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\settings\FirestoreSettingsService.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\settings\SettingsFirestoreInterface.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\OptionEntity.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\exchange\ExchangeRateFirestoreInterface.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\ExchangeCurrencyRateEntity.java

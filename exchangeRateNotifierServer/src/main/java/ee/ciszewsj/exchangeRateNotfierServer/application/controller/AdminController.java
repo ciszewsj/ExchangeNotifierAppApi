@@ -1,15 +1,15 @@
 package ee.ciszewsj.exchangeRateNotfierServer.application.controller;
 
 
-import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.WrongQuerySizeException;
-import ee.ciszewsj.exchangeRateNotfierServer.application.firestore.settings.SettingsFirestoreInterface;
+import ee.ciszewsj.exchangeratecommondata.exceptions.WrongQuerySizeException;
+import ee.ciszewsj.exchangeratecommondata.repositories.settings.SettingsFirestoreInterface;
 import ee.ciszewsj.exchangeRateNotfierServer.application.service.CurrencyUpdaterService;
 import ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.NotifierService;
-import ee.ciszewsj.exchangeRateNotfierServer.data.ExchangeCurrencyRateEntity;
-import ee.ciszewsj.exchangeRateNotfierServer.data.NotificationTypeEntity;
 import ee.ciszewsj.exchangerateclient.client.ExchangeRateClient;
 import ee.ciszewsj.exchangerateclient.client.ExchangeRateDataException;
 import ee.ciszewsj.exchangerateclient.data.response.SupportedCodeResponse;
+import ee.ciszewsj.exchangeratecommondata.dto.ExchangeCurrencyRateEntity;
+import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,8 +1,8 @@
 package ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.notfierSettings;
 
 import ee.ciszewsj.exchangeRateNotfierServer.application.service.notify.NotifierInterface;
-import ee.ciszewsj.exchangeRateNotfierServer.data.NotificationTypeEntity;
-import ee.ciszewsj.exchangeRateNotfierServer.data.OptionEntity;
+import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
+import ee.ciszewsj.exchangeratecommondata.dto.OptionEntity;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

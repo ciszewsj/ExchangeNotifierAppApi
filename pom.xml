@@ -16,6 +16,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>exchangeRateClient</module>
+		<module>exchangeRateCommonData</module>
 		<module>exchangeRateNotifierServer</module>
 	</modules>
 
