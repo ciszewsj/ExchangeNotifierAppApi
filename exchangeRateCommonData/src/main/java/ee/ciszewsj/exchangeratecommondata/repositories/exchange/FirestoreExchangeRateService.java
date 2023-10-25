@@ -19,7 +19,7 @@ public record FirestoreExchangeRateService(Firestore firestore) implements Excha
 	private static final long yearInMillis = 31556952000L;
 
 	@Override
-	public void addExchangeRate(String mainCurrency, String secondCurrency, ExchangeCurrencyRateEntity exchangeCurrencyRate) throws ExecutionException, InterruptedException {
+	public CurrencyExchangeRateDocument addExchangeRate(String mainCurrency, String secondCurrency, ExchangeCurrencyRateEntity exchangeCurrencyRate) throws ExecutionException, InterruptedException {
 		CollectionReference collection = firestore.collection(mainCurrency);
 		DocumentSnapshot document = collection.document(secondCurrency).get().get();
 
@@ -28,12 +28,15 @@ public record FirestoreExchangeRateService(Firestore firestore) implements Excha
 				CurrencyExchangeRateDocument exchangeRateDocument = document.toObject(CurrencyExchangeRateDocument.class);
 				List<ExchangeCurrencyRateEntity> rateEntities = Objects.requireNonNull(exchangeRateDocument).getExchangeRates().stream().filter(rate -> rate.getDate().getTime() >= (new Date().getTime() - yearInMillis)).collect(Collectors.toList());
 				rateEntities.add(exchangeCurrencyRate);
-				document.getReference().set(CurrencyExchangeRateDocument.builder().exchangeRates(rateEntities).build());
-				return;
+				CurrencyExchangeRateDocument rateDocument = CurrencyExchangeRateDocument.builder().exchangeRates(rateEntities).build();
+				document.getReference().set(rateDocument);
+				return rateDocument;
 			} catch (Exception e) {
 				log.error("Could not update currency exchange rate due to {}", e, e);
 			}
 		}
-		document.getReference().set(CurrencyExchangeRateDocument.builder().exchangeRates(List.of(exchangeCurrencyRate)).build());
+		CurrencyExchangeRateDocument rateDocument = CurrencyExchangeRateDocument.builder().exchangeRates(List.of(exchangeCurrencyRate)).build();
+		document.getReference().set(rateDocument);
+		return rateDocument;
 	}
 }

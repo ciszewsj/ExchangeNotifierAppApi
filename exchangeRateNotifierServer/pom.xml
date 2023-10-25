@@ -35,6 +35,10 @@
 			<artifactId>firebase-admin</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>ee.ciszewsj</groupId>
 			<artifactId>exchangeRateClient</artifactId>
 			<version>${project.version}</version>

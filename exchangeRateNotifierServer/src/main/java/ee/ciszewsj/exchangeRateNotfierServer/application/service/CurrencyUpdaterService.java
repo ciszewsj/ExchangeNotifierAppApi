@@ -4,6 +4,7 @@ import ee.ciszewsj.exchangerateclient.client.ExchangeRateClient;
 import ee.ciszewsj.exchangerateclient.client.ExchangeRateDataException;
 import ee.ciszewsj.exchangerateclient.data.response.HistoricalResponse;
 import ee.ciszewsj.exchangerateclient.data.response.StandardResponse;
+import ee.ciszewsj.exchangeratecommondata.documents.CurrencyExchangeRateDocument;
 import ee.ciszewsj.exchangeratecommondata.dto.CurrencyEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.ExchangeCurrencyRateEntity;
 import ee.ciszewsj.exchangeratecommondata.repositories.currencies.CurrenciesRateFirestoreInterface;
@@ -23,14 +24,17 @@ import java.util.stream.Collectors;
 public class CurrencyUpdaterService {
 	private final ExchangeRateClient exchangeRateClient;
 	private final ExchangeRateFirestoreInterface exchangeRateDb;
+	private final RabbitEmitterService emitterService;
 
 	private List<String> activeCurrencySymbols = new ArrayList<>();
 
 	public CurrencyUpdaterService(ExchangeRateClient exchangeRateClient,
 	                              ExchangeRateFirestoreInterface exchangeRateDb,
-	                              CurrenciesRateFirestoreInterface currenciesDb) {
+	                              CurrenciesRateFirestoreInterface currenciesDb,
+	                              RabbitEmitterService emitterService) {
 		this.exchangeRateClient = exchangeRateClient;
 		this.exchangeRateDb = exchangeRateDb;
+		this.emitterService = emitterService;
 
 		try {
 			updateActiveCurrencySymbols(currenciesDb.getCurrencies());
@@ -58,21 +62,24 @@ public class CurrencyUpdaterService {
 	public StandardResponse loadNewCurrencyExchangeRate(String currencySymbol) throws ExchangeRateDataException {
 		StandardResponse response = exchangeRateClient.standardRequest(currencySymbol);
 		log.info("Loading currency {}...", currencySymbol);
+		Date date = new Date();
 		response.getConversionRates().forEach((key, value) -> {
 			try {
-				exchangeRateDb.addExchangeRate(response.getBaseCode(),
+				CurrencyExchangeRateDocument rateDocument = exchangeRateDb.addExchangeRate(response.getBaseCode(),
 						key,
 						ExchangeCurrencyRateEntity
 								.builder()
-								.date(new Date(response.getTimeLastUpdateUnix() * 1000))
+								.date(date)
 								.rate(value)
 								.build());
 				log.debug("Successfully load currency {} - {}", currencySymbol, key);
+				emitterService.emitEvent(currencySymbol, key, rateDocument);
 
 			} catch (ExecutionException | InterruptedException e) {
 				log.error("Could not add {} - {} exchange rate due to {}", response.getBaseCode(), key, e, e);
 			}
 		});
+		log.info("... {} loaded successfully", currencySymbol);
 
 		return response;
 	}
