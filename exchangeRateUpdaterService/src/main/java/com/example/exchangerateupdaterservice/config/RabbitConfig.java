@@ -1,4 +1,4 @@
-package ee.ciszewsj.exchangeRateNotfierServer.config;
+package com.example.exchangerateupdaterservice.config;
 
 import ee.ciszewsj.exchangeratecommondata.rabbit.RabbitNamespace;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +10,8 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Map;
 
 
 @Slf4j
@@ -26,6 +28,20 @@ public class RabbitConfig {
 	}
 
 	@Bean
+	public Queue queue(RabbitAdmin rabbitAdmin) {
+		Queue queue = new Queue(RabbitNamespace.QUEUE_NAME, true, false, false, Map.of("x-message-ttl", 60000));
+		configRabbit(rabbitAdmin, queue);
+		return queue;
+	}
+
+	@Bean
+	public Binding binding(RabbitAdmin rabbitAdmin, TopicExchange exchange, Queue queue) {
+		Binding binding = BindingBuilder.bind(queue).to(exchange).with("#");
+		configRabbit(rabbitAdmin, binding);
+		return binding;
+	}
+
+	@Bean
 	public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
 		return new RabbitAdmin(connectionFactory);
 	}
@@ -39,4 +55,13 @@ public class RabbitConfig {
 	public void configRabbit(RabbitAdmin rabbitAdmin, AbstractExchange exchange) {
 		rabbitAdmin.declareExchange(exchange);
 	}
+
+	public void configRabbit(RabbitAdmin rabbitAdmin, Queue queue) {
+		rabbitAdmin.declareQueue(queue);
+	}
+
+	public void configRabbit(RabbitAdmin rabbitAdmin, Binding binding) {
+		rabbitAdmin.declareBinding(binding);
+	}
+
 }

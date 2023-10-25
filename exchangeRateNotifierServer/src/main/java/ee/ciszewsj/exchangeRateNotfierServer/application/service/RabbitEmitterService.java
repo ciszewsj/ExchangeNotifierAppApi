@@ -3,12 +3,11 @@ package ee.ciszewsj.exchangeRateNotfierServer.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.ciszewsj.exchangeratecommondata.documents.CurrencyExchangeRateDocument;
 import ee.ciszewsj.exchangeratecommondata.rabbit.RabbitCurrencyDocumentWrapper;
+import ee.ciszewsj.exchangeratecommondata.rabbit.RabbitNamespace;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-
-import static ee.ciszewsj.exchangeRateNotfierServer.config.RabbitConfig.EXCHANGE_NAME;
 
 @Slf4j
 @Service
@@ -26,7 +25,7 @@ public class RabbitEmitterService {
 
 		try {
 			String serializedDocument = objectMapper.writeValueAsString(wrappedDocument);
-			rabbitTemplate.convertAndSend(EXCHANGE_NAME, mainCurrency, serializedDocument);
+			rabbitTemplate.convertAndSend(RabbitNamespace.EXCHANGE_NAME, mainCurrency, serializedDocument);
 		} catch (Exception e) {
 			log.error("Could not emit event due to  {}", e, e);
 		}
