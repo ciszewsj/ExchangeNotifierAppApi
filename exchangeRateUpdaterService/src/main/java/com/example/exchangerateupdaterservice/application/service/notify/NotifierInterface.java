@@ -1,7 +1,12 @@
 package com.example.exchangerateupdaterservice.application.service.notify;
 
-import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
+import ee.ciszewsj.exchangeratecommondata.documents.CurrencyExchangeRateDocument;
+import ee.ciszewsj.exchangeratecommondata.documents.UserSettingsDocument;
 
 public interface NotifierInterface {
-	NotificationTypeEntity toNotificationTypeEntity();
+	void updateNotifierUserSettings(String documentId, UserSettingsDocument document);
+
+	void exchangeCurrencyUpdate(CurrencyExchangeRateDocument document);
+
+	void dateCurrencyUpdate();
 }

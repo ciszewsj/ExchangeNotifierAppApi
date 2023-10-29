@@ -7,6 +7,8 @@ import java.util.List;
 
 @Data
 @Builder
-public class NotificationsSettingsEntity {
+public class NotificationSettingEntity {
+	private String currencySymbol;
+	private String secondCurrencySymbol;
 	private List<NotificationTypeEntity> notificationTypes;
 }

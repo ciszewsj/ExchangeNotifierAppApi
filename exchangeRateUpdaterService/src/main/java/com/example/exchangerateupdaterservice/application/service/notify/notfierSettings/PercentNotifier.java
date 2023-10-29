@@ -10,7 +10,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-public class PercentNotifier implements NotifierInterface {
+public class PercentNotifier {
 
 	public static final String TYPE_NAME = "Percent has changed";
 
@@ -23,7 +23,6 @@ public class PercentNotifier implements NotifierInterface {
 	private static final String PERIOD_1_Day = "1 Day";
 	private static final String PERIOD_1_Month = "1 Month";
 
-	@Override
 	public NotificationTypeEntity toNotificationTypeEntity() {
 		return NotificationTypeEntity.builder()
 				.typeName(TYPE_NAME)

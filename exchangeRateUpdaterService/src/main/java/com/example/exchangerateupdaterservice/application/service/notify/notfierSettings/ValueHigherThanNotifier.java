@@ -10,22 +10,22 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ValueHigherThanNotifier implements NotifierInterface {
+public class ValueHigherThanNotifier {
 
 	public static final String TYPE_NAME = "Value is higher than";
 
 	private static final String VALUE1 = "Value";
 
-	@Override
-	public NotificationTypeEntity toNotificationTypeEntity() {
-		return NotificationTypeEntity.builder()
-				.typeName(TYPE_NAME)
-				.options(List.of(
-						OptionEntity.builder()
-								.name(VALUE1)
-								.type(OptionEntity.FieldType.DOUBLE_VALUE)
-								.build()
-				))
-				.build();
-	}
+//	@Override
+//	public NotificationTypeEntity toNotificationTypeEntity() {
+//		return NotificationTypeEntity.builder()
+//				.typeName(TYPE_NAME)
+//				.options(List.of(
+//						OptionEntity.builder()
+//								.name(VALUE1)
+//								.type(OptionEntity.FieldType.DOUBLE_VALUE)
+//								.build()
+//				))
+//				.build();
+//	}
 }
