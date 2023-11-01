@@ -1,5 +1,6 @@
 package com.example.exchangerateupdaterservice.application.service;
 
+import com.example.exchangerateupdaterservice.application.service.notify.NotifierService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.ciszewsj.exchangeratecommondata.documents.CurrencyExchangeRateDocument;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,13 @@ import org.springframework.stereotype.Service;
 public class DocumentRabbitListener {
 
 	private final ObjectMapper objectMapper;
+	private final NotifierService notifierService;
 
 	@RabbitListener
 	public void listener(Message message) {
 		try {
 			CurrencyExchangeRateDocument rateDocument = objectMapper.readValue(message.getBody(), CurrencyExchangeRateDocument.class);
+			notifierService.exchangeCurrencyUpdate(rateDocument);
 		} catch (Exception e) {
 			log.error("Could not process rabbit message due to {}", e, e);
 		}

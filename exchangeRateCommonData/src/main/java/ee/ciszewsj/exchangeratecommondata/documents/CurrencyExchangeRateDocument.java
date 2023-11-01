@@ -14,7 +14,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CurrencyExchangeRateDocument {
+	public static final String MAIN_CURRENCY = "mainCurrency";
+	public static final String SECONDARY_CURRENCY = "secondaryCurrency";
 	public static final String EXCHANGE_RATE_NAME = "exchangeRates";
+
+	@JsonProperty(MAIN_CURRENCY)
+	private String mainCurrency;
+	@JsonProperty(SECONDARY_CURRENCY)
+	private String secondaryCurrency;
 
 	@JsonProperty(EXCHANGE_RATE_NAME)
 	private List<ExchangeCurrencyRateEntity> exchangeRates;

@@ -7,7 +7,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class TimeNotificationSettings extends AbstractNotificationSettings {
-	private Integer hour;
-	private Integer minute;
+public class ValueNotificationSettings extends AbstractNotificationSettings {
+	private Double value;
+	private Type type;
+
+	public enum Type {
+		LOWER,
+		HIGHER
+	}
 }

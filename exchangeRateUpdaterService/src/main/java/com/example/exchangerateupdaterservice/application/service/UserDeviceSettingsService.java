@@ -5,10 +5,10 @@ import ee.ciszewsj.exchangeratecommondata.documents.UserSettingsDocument;
 import ee.ciszewsj.exchangeratecommondata.dto.NotificationSettingEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.UserDeviceSettings;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -17,10 +17,9 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class UserDeviceSettingsService {
 
-	List<UserSettingsDocument> userSettingsDocuments;
+	private final List<UserSettingsDocument> userSettingsDocuments = new ArrayList<>();
 
 	public Stream<NotificationSettingsDto> getNotificationsSettingsByType(NotificationTypeEntity.NOTIFICATION_TYPES notificationType) {
 		Date currentDate = new Date();

@@ -22,8 +22,7 @@ public class NotificationTypeEntity {
 	public enum NOTIFICATION_TYPES {
 		TIME,
 		PERCENT,
-		VALUE_HIGHER,
-		VALUE_LOWER
+		VALUE
 	}
 
 }

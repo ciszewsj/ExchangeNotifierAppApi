@@ -1,5 +1,6 @@
 package ee.ciszewsj.exchangeratecommondata.dto.notification.settings;
 
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,7 +8,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class TimeNotificationSettings extends AbstractNotificationSettings {
-	private Integer hour;
-	private Integer minute;
+public class PercentNotificationSettings extends AbstractNotificationSettings {
+	private Double percent;
+	private PeriodTime period;
+
+	public enum PeriodTime {
+		DAY,
+		WEEK,
+		MONTH
+	}
 }
