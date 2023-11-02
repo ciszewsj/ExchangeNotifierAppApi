@@ -13,6 +13,7 @@ public class PercentNotificationSettings extends AbstractNotificationSettings {
 	private PeriodTime period;
 
 	public enum PeriodTime {
+		HOUR,
 		DAY,
 		WEEK,
 		MONTH
