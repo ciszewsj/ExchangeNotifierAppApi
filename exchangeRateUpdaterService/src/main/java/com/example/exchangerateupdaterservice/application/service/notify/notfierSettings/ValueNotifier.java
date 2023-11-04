@@ -7,6 +7,7 @@ import ee.ciszewsj.exchangeratecommondata.documents.CurrencyExchangeRateDocument
 import ee.ciszewsj.exchangeratecommondata.dto.ExchangeCurrencyRateEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.notification.settings.ValueNotificationSettings;
+import ee.ciszewsj.exchangeratecommondata.repositories.usersettings.UserSettingsFirestoreInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class ValueNotifier implements NotifierInterface {
 
 	private final UserDeviceSettingsService deviceSettingsService;
 	private final NotifierSenderService notifierSenderService;
+	private final UserSettingsFirestoreInterface userSettingsFirestore;
 	private final static String notificationTemplate = "Exchange rate of %s has changed to %s";
 
 	@Override
@@ -49,7 +51,7 @@ public class ValueNotifier implements NotifierInterface {
 														rate.toString()
 												);
 
-												// TODO: Turn notification off
+												userSettingsFirestore.turnNotificationOff(notificationSettingsDto.getDocumentId(), notificationType.getUuid());
 											}
 										}
 										case HIGHER -> {
@@ -60,7 +62,7 @@ public class ValueNotifier implements NotifierInterface {
 														rate.toString()
 												);
 
-												// TODO: Turn notification off
+												userSettingsFirestore.turnNotificationOff(notificationSettingsDto.getDocumentId(), notificationType.getUuid());
 											}
 										}
 									}

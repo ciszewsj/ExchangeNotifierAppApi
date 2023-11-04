@@ -9,6 +9,7 @@ import ee.ciszewsj.exchangeratecommondata.dto.ExchangeCurrencyRateEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.NotificationSettingEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.notification.settings.PercentNotificationSettings;
+import ee.ciszewsj.exchangeratecommondata.repositories.usersettings.UserSettingsFirestoreInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class PercentNotifier implements NotifierInterface {
 
 	private final UserDeviceSettingsService deviceSettingsService;
 	private final NotifierSenderService notifierSenderService;
+	private final UserSettingsFirestoreInterface userSettingsFirestore;
 
 	private static final String notificationTemplate = "Exchange rate of %s has changed %s during %s period";
 	private static final DateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yyyy");
@@ -81,18 +83,18 @@ public class PercentNotifier implements NotifierInterface {
 																"0.0",
 																currentDate
 														);
-														// TODO: Turn off notification
+														userSettingsFirestore.turnNotificationOff(notificationSettingsDto.getDocumentId(), notificationTypeEntity.getUuid());
 													} else if (percentNotificationSettings.getPercent() < 0) {
-														checkIfCorrectAndSendNotification(currentDate, notificationSettingsDto, notificationSettingEntity, percentNotificationSettings, max, newest.get());
+														checkIfCorrectAndSendNotification(currentDate, notificationSettingsDto, notificationTypeEntity.getUuid(), notificationSettingEntity, percentNotificationSettings, max, newest.get());
 													} else {
-														checkIfCorrectAndSendNotification(currentDate, notificationSettingsDto, notificationSettingEntity, percentNotificationSettings, min, newest.get());
+														checkIfCorrectAndSendNotification(currentDate, notificationSettingsDto, notificationTypeEntity.getUuid(), notificationSettingEntity, percentNotificationSettings, min, newest.get());
 													}
 												}
 										))
 		);
 	}
 
-	private void checkIfCorrectAndSendNotification(Date currentDate, NotificationSettingsDto notificationSettingsDto, NotificationSettingEntity notificationSettingEntity, PercentNotificationSettings percentNotificationSettings, Optional<ExchangeCurrencyRateEntity> min, ExchangeCurrencyRateEntity newest) {
+	private void checkIfCorrectAndSendNotification(Date currentDate, NotificationSettingsDto notificationSettingsDto, String uuid, NotificationSettingEntity notificationSettingEntity, PercentNotificationSettings percentNotificationSettings, Optional<ExchangeCurrencyRateEntity> min, ExchangeCurrencyRateEntity newest) {
 		if (min.isPresent()) {
 			double currentPercent = (newest.getRate() - min.get().getRate()) / min.get().getRate();
 			if (currentPercent >= percentNotificationSettings.getPercent()) {
@@ -101,7 +103,7 @@ public class PercentNotifier implements NotifierInterface {
 						Double.toString(currentPercent),
 						currentDate
 				);
-				// TODO: Turn off notification
+				userSettingsFirestore.turnNotificationOff(notificationSettingsDto.getDocumentId(), uuid);
 			}
 		}
 	}

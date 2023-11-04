@@ -11,7 +11,10 @@ public class NotificationTypeEntity {
 	public static final String TYPE_NAME = "type_name";
 	public static final String ENABLED = "enabled";
 	public static final String OPTIONS = "options";
+	public static final String UUID = "uuid";
 
+	@JsonProperty(UUID)
+	private String uuid;
 	@JsonProperty(TYPE_NAME)
 	private NOTIFICATION_TYPES typeName;
 	@JsonProperty(ENABLED)
