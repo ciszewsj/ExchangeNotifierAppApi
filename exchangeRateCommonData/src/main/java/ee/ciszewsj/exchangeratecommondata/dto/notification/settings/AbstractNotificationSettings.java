@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public abstract class AbstractNotificationSettings {
+	private String uuid;
 	private Type notificationType;
-
 
 	enum Type {
 		VALUE_TYPE,

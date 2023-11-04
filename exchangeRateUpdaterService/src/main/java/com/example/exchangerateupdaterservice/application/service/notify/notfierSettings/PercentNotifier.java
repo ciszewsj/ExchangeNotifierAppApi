@@ -1,19 +1,21 @@
 package com.example.exchangerateupdaterservice.application.service.notify.notfierSettings;
 
+import com.example.exchangerateupdaterservice.application.notifier.NotifierSenderService;
 import com.example.exchangerateupdaterservice.application.service.UserDeviceSettingsService;
 import com.example.exchangerateupdaterservice.application.service.notify.NotifierInterface;
+import com.example.exchangerateupdaterservice.data.NotificationSettingsDto;
 import ee.ciszewsj.exchangeratecommondata.documents.CurrencyExchangeRateDocument;
 import ee.ciszewsj.exchangeratecommondata.dto.ExchangeCurrencyRateEntity;
+import ee.ciszewsj.exchangeratecommondata.dto.NotificationSettingEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.notification.settings.PercentNotificationSettings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Optional;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -21,9 +23,15 @@ import java.util.Optional;
 public class PercentNotifier implements NotifierInterface {
 
 	private final UserDeviceSettingsService deviceSettingsService;
+	private final NotifierSenderService notifierSenderService;
+
+	private static final String notificationTemplate = "Exchange rate of %s has changed %s during %s period";
+	private static final DateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+
 
 	@Override
 	public void onCurrencyRateUpdate(CurrencyExchangeRateDocument document) {
+		Date currentDate = new Date();
 		deviceSettingsService.getNotificationsSettingsByType(NotificationTypeEntity.NOTIFICATION_TYPES.PERCENT).forEach(
 				notificationSettingsDto ->
 						notificationSettingsDto.getNotificationSettingEntities()
@@ -65,24 +73,52 @@ public class PercentNotifier implements NotifierInterface {
 													if (newest.isEmpty()) {
 														return;
 													}
+
+
 													if (percentNotificationSettings.getPercent() == 0) {
-
-														// TODO: Notify
-
+														sendNotification(notificationSettingsDto.getDevices(),
+																currenciesToKey(notificationSettingEntity.getCurrencySymbol(), notificationSettingEntity.getSecondCurrencySymbol()),
+																"0.0",
+																currentDate
+														);
 														// TODO: Turn off notification
 													} else if (percentNotificationSettings.getPercent() < 0) {
-														if (max.isPresent() && (newest.get().getRate() - max.get().getRate()) / max.get().getRate() >= percentNotificationSettings.getPercent()) {
-															// TODO: Notify
-															// TODO: Turn off notification
-														}
+														checkIfCorrectAndSendNotification(currentDate, notificationSettingsDto, notificationSettingEntity, percentNotificationSettings, max, newest.get());
 													} else {
-														if (min.isPresent() && (newest.get().getRate() - min.get().getRate()) / min.get().getRate() <= percentNotificationSettings.getPercent()) {
-															// TODO: Notify
-															// TODO: Turn off notification
-														}
+														checkIfCorrectAndSendNotification(currentDate, notificationSettingsDto, notificationSettingEntity, percentNotificationSettings, min, newest.get());
 													}
 												}
 										))
+		);
+	}
+
+	private void checkIfCorrectAndSendNotification(Date currentDate, NotificationSettingsDto notificationSettingsDto, NotificationSettingEntity notificationSettingEntity, PercentNotificationSettings percentNotificationSettings, Optional<ExchangeCurrencyRateEntity> min, ExchangeCurrencyRateEntity newest) {
+		if (min.isPresent()) {
+			double currentPercent = (newest.getRate() - min.get().getRate()) / min.get().getRate();
+			if (currentPercent >= percentNotificationSettings.getPercent()) {
+				sendNotification(notificationSettingsDto.getDevices(),
+						currenciesToKey(notificationSettingEntity.getCurrencySymbol(), notificationSettingEntity.getSecondCurrencySymbol()),
+						Double.toString(currentPercent),
+						currentDate
+				);
+				// TODO: Turn off notification
+			}
+		}
+	}
+
+	private String currenciesToKey(String mainCurrency, String secondaryCurrency) {
+		return "%s-%s".formatted(mainCurrency, secondaryCurrency);
+	}
+
+	private void sendNotification(List<String> devices,
+	                              String title,
+	                              String value,
+	                              Date date
+	) {
+		notifierSenderService.sendNotification(devices,
+				title,
+				String.format(notificationTemplate, title, value, dateFormat.format(date)),
+				Map.of()
 		);
 	}
 }

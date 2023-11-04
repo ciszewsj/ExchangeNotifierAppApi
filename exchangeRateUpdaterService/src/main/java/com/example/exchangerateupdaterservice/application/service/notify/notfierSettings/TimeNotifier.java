@@ -1,7 +1,10 @@
 package com.example.exchangerateupdaterservice.application.service.notify.notfierSettings;
 
+import com.example.exchangerateupdaterservice.application.notifier.NotifierSenderService;
+import com.example.exchangerateupdaterservice.application.service.CurrencyRepositoryService;
 import com.example.exchangerateupdaterservice.application.service.UserDeviceSettingsService;
 import com.example.exchangerateupdaterservice.application.service.notify.NotifierInterface;
+import com.example.exchangerateupdaterservice.data.CurrencyRateDto;
 import ee.ciszewsj.exchangeratecommondata.documents.CurrencyExchangeRateDocument;
 import ee.ciszewsj.exchangeratecommondata.dto.ExchangeCurrencyRateEntity;
 import ee.ciszewsj.exchangeratecommondata.dto.NotificationTypeEntity;
@@ -20,7 +23,10 @@ public class TimeNotifier implements NotifierInterface {
 
 	private Date lastUpdate = new Date();
 	private final UserDeviceSettingsService deviceSettingsService;
-	private final Map<String, Double> newestCurrencyValue;
+	private final NotifierSenderService notifierSenderService;
+	private final CurrencyRepositoryService repositoryService;
+
+	private final static String notificationTemplate = "Exchange rate of %s is %s at %s";
 
 	public void sendNotificationOnTimeProperty() {
 
@@ -38,10 +44,14 @@ public class TimeNotifier implements NotifierInterface {
 										Date ntDate = getNotificationTime(timeNotificationSettings.getHour(), timeNotificationSettings.getMinute());
 
 										if (ntDate.getTime() <= currentDate.getTime()
-												&& ntDate.getTime() > lastUpdate.getTime()
-												&& newestCurrencyValue.containsKey(key)) {
-											log.info("Send notification");
-											// TODO: Notify user about changes
+												&& ntDate.getTime() > lastUpdate.getTime()) {
+											Optional<CurrencyRateDto> rate = repositoryService.getRateByCurrencies(settings.getCurrencySymbol(),
+													settings.getSecondCurrencySymbol());
+
+											rate.ifPresent(r -> {
+												log.info("Send notification");
+												sendNotification(object.getDevices(), key, currentDate, rate.get().getRate().toString());
+											});
 										}
 									}
 							);
@@ -54,9 +64,8 @@ public class TimeNotifier implements NotifierInterface {
 
 	@Override
 	public void onCurrencyRateUpdate(CurrencyExchangeRateDocument document) {
-		String key = currenciesToKey(document.getMainCurrency(), document.getSecondaryCurrency());
 		Optional<ExchangeCurrencyRateEntity> currencyRate = document.getExchangeRates().stream().max(Comparator.comparing(ExchangeCurrencyRateEntity::getDate));
-		currencyRate.ifPresent(rate -> newestCurrencyValue.put(key, rate.getRate()));
+		currencyRate.ifPresent(rate -> repositoryService.updateRateByCurrencies(document.getMainCurrency(), document.getSecondaryCurrency(), currencyRate.get().getRate()));
 	}
 
 	private String currenciesToKey(String mainCurrency, String secondaryCurrency) {
@@ -74,5 +83,17 @@ public class TimeNotifier implements NotifierInterface {
 		}
 
 		return calendar.getTime();
+	}
+
+	private void sendNotification(List<String> devices,
+	                              String title,
+	                              Date date,
+	                              String value
+	) {
+		notifierSenderService.sendNotification(devices,
+				title,
+				String.format(notificationTemplate, title, value, date),
+				Map.of()
+		);
 	}
 }

@@ -10,6 +10,7 @@ import java.util.List;
 @Builder
 public class NotificationSettingsDto {
 
+	private String documentId;
 	private List<String> devices;
 	private List<NotificationSettingEntity> notificationSettingEntities;
 }
