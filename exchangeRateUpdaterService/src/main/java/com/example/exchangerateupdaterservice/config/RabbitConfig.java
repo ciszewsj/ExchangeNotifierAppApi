@@ -43,6 +43,9 @@ public class RabbitConfig {
 
 	@Bean
 	public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+		log.error(connectionFactory.getHost() + " " + connectionFactory.getPort()
+				+ " " + connectionFactory.getUsername() + " " +
+				connectionFactory.getVirtualHost());
 		return new RabbitAdmin(connectionFactory);
 	}
 

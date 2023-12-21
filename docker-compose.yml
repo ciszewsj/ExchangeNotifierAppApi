@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  rabbit:
+    image: rabbitmq:3.11.5-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend_network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  notifierservice:
+    build:
+      context: ./exchangeRateNotifierServer
+      dockerfile: Dockerfile
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    links:
+      - rabbit
+    networks:
+      - backend_network
+
+  updaterservice:
+    build:
+      context: ./exchangeRateUpdaterService
+      dockerfile: Dockerfile
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    links:
+      - rabbit
+    networks:
+      - backend_network
+
+
+networks:
+  backend_network:
+    driver: bridge

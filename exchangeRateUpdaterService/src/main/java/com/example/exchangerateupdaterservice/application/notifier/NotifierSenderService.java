@@ -1,22 +1,20 @@
 package com.example.exchangerateupdaterservice.application.notifier;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
+import io.github.jav.exposerversdk.ExpoPushMessage;
+import io.github.jav.exposerversdk.ExpoPushTicket;
+import io.github.jav.exposerversdk.PushClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotifierSenderService implements NotifierSender {
-
-	private final FirebaseMessaging firebaseMessaging;
 
 	@Override
 	public void sendNotification(List<String> devices,
@@ -28,21 +26,29 @@ public class NotifierSenderService implements NotifierSender {
 
 	@Override
 	public void sendNotification(String device, String title, String body, Map<String, String> data) {
-		Notification notification = Notification.builder()
-				.setTitle(title)
-				.setBody(body)
-				.build();
+		ExpoPushMessage message = new ExpoPushMessage();
 
-		Message message = Message.builder()
-				.setToken(device)
-				.setNotification(notification)
-				.putAllData(data)
-				.build();
+		if (!PushClient.isExponentPushToken(device)) {
+			log.warn("Token:" + device + " is not a valid token.");
+			return;
+		}
+
+		message.getTo().add(device);
+		message.setTitle(title);
+		message.setBody(body);
+		message.setData(data);
+
+		List<ExpoPushMessage> expoPushMessages = List.of(message);
+
+		PushClient client = new PushClient();
+
+
+		CompletableFuture<List<ExpoPushTicket>> ticket = client.sendPushNotificationsAsync(expoPushMessages);
 
 		try {
-			firebaseMessaging.send(message);
-		} catch (FirebaseMessagingException e) {
-			log.error("Could not send message due to:", e);
+			ticket.wait();
+		} catch (InterruptedException e) {
+			log.error("Error during execution of ticker", e);
 		}
 	}
 }

@@ -2,6 +2,7 @@ C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\cisz
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\exchange\FirestoreExchangeRateService.java
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\notification\settings\AbstractNotificationSettings.java
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\notification\settings\TimeNotificationSettings.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\usersettings\FirestoreUserSettingsService.java
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\notification\settings\ValueNotificationSettings.java
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\NotificationTypeEntity.java
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\rabbit\RabbitNamespace.java
@@ -17,6 +18,7 @@ C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\cisz
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\exchange\ExchangeRateFirestoreInterface.java
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\currencies\CurrenciesRateFirestoreInterface.java
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\documents\CurrencyExchangeRateDocument.java
+C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\usersettings\UserSettingsFirestoreInterface.java
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\documents\CurrencyDocument.java
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\dto\ExchangeCurrencyRateEntity.java
 C:\Study\exchangeRateAppNotifierApp\exchangeRateCommonData\src\main\java\ee\ciszewsj\exchangeratecommondata\repositories\currencies\CurrenciesRateService.java
