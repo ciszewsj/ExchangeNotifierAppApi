@@ -18,6 +18,8 @@ services:
     build:
       context: ./exchangeRateNotifierServer
       dockerfile: Dockerfile
+    ports:
+      - "8070:8080"
     depends_on:
       rabbit:
         condition: service_healthy
@@ -30,6 +32,8 @@ services:
     build:
       context: ./exchangeRateUpdaterService
       dockerfile: Dockerfile
+    ports:
+      - "8071:8080"
     depends_on:
       rabbit:
         condition: service_healthy

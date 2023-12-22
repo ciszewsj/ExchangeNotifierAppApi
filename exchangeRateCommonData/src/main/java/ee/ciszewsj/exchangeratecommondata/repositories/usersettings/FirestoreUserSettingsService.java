@@ -77,6 +77,7 @@ public class FirestoreUserSettingsService implements UserSettingsFirestoreInterf
 				log.error("");
 				return;
 			}
+			log.info("Updating...");
 			for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
 				String documentId = document.getId();
 				UserSettingsDocument userSettings = document.toObject(UserSettingsDocument.class);

@@ -2,11 +2,14 @@ package ee.ciszewsj.exchangeratecommondata.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ee.ciszewsj.exchangeratecommondata.dto.notification.settings.AbstractNotificationSettings;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
 @Builder
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class NotificationTypeEntity {
 	public static final String TYPE_NAME = "type_name";
 	public static final String ENABLED = "enabled";
@@ -21,6 +24,14 @@ public class NotificationTypeEntity {
 	private boolean enabled;
 	@JsonProperty(OPTIONS)
 	private AbstractNotificationSettings options;
+
+	public void setType_name(NOTIFICATION_TYPES typeName) {
+		this.typeName = typeName;
+	}
+
+	public NOTIFICATION_TYPES getType_name() {
+		return typeName;
+	}
 
 	public enum NOTIFICATION_TYPES {
 		TIME,
